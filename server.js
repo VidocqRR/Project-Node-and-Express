@@ -1,8 +1,10 @@
-let http = require('http')
-let url = require('url')
-let path = require('path')
-let fs = require('fs')
+let http = require('http');
+let url = require('url');
+let path = require('path');
+let fs = require('fs');
 let port = 3000;
+let route = require('./server.home')
+
 // install Formidable npm package
 
 let mime = {
@@ -26,7 +28,7 @@ let server = http.createServer((req,res) => {
           }
       })
    } else if(req.url.match('\.css')) {
-       let file = path.join(__dirname, 'add.css',req.url)
+       let file = path.join(__dirname, 'css',req.url)
        let StreamFile = fs.createReadStream(file,'utf-8',req.url)
        res.writeHead(200, {
            'Content-Type' : mime
@@ -39,8 +41,8 @@ let server = http.createServer((req,res) => {
     fileStream.pipe(res);
    } 
    
-  else if (req.url === '/registration') {
-      fs.readFile('registration.html',(err,data) => {
+  else if (req.url === '/home' && req.url.match('\.css')) {
+      fs.readFile('Node and Express.js Project.html',(err,data) => {
           if(err) {
               console.log(err)
           } else {
@@ -51,8 +53,22 @@ let server = http.createServer((req,res) => {
               res.end()
           }
       })
-   }
-   else {
+       let fileCss = path.join(__dirname,'css')
+       let StreamCSs = fs.createReadStream(fileCss,'utf-8',req.url)
+       res.writeHead(200 , {
+           'Content-Type' : mime
+       })       
+       StreamCSs.pipe(file)
+   
+    
+     
+    
+    }
+
+ else {
+       res.writeHead(400,() => {
+       console.log('Have a some Error!')
+       })
        res.end()
    }
 })
